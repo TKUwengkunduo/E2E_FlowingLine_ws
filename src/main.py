@@ -1,4 +1,6 @@
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
+
 import cv2
 import numpy as np
 import  os
@@ -12,34 +14,52 @@ def load_data():
     Data_train = []
     Data_train_labe = [1]
 
-    img = cv2.imread('/home/weng/weng_ws/E2E_FlowingLine_ws/test_data/1.jpg')
+    img = cv2.imread('/home/iarc/work/E2E_FlowingLine_ws/test_data/1.jpg')
     # img = LoadData.image_convert_type(img)
     img = LoadData.image_resize(img, (640, 480))
+
+    # img = LoadData.image_reshape_2to1(img)
+    img = img.flatten('C')
+
     print('=========================================')
-    print(np.shape(img))
+    print('2', np.shape(img))
     print('=========================================')
-    img = LoadData.image_reshape_2to1(img)
-    Data_train.append(np.array(img/255.0))
-    print('=========================================')
-    print(np.shape(Data_train))
-    print('=========================================')
+    print(img)
+    
+    # Data_train = tf.compat.v1.placeholder("float", [None, img])
+    
+    # Data_train = np.expand_dims(img, axis = 0)
+
+    # Data_train.append(np.array(img/255.0))
+    
+    # print('=========================================')
+    # print('3', np.shape(Data_train))
+    # print('=========================================')
+
+    # print(Data_train)
 
     # img = cv2.imread('/home/weng/weng_ws/E2E_FlowingLine_ws/test_data/2.jpg')
     # img = LoadData.image_convert_type(img)
     # img = LoadData.image_resize(img, (640, 480))
-    # img = LoadData.image_reshape_2to1(img)
+
     # Data_train.append(np.array(img/255.0))
 
-    x_train = np.array(Data_train)
+    # 重塑 x_train 資料的維度成為 (samples, time_steps, features)
+    x_train = np.reshape(img, (1, 1, 921600))  # <-- 特別注意這裡
+
+
+    # x_train = np.array(Data_train)
     y_train = np.array(Data_train_labe)
+
 
     return x_train, y_train
 
 
 def model_building():
     model = tf.keras.models.Sequential([
+        # , input_shape=(1,921600)
         # units(LSTM unit number), input_shape(, number of features)
-        tf.keras.layers.LSTM(units = 1, input_shape=(1,921600),return_sequences=True),
+        tf.keras.layers.LSTM(units = 100, input_shape=(1,921600), return_sequences=True),
         # Shape => [batch, time, features]
         tf.keras.layers.Dense(1, activation='softmax')
     ])
@@ -48,11 +68,14 @@ def model_building():
 
 
 def train_model(model, x_train, y_train):
-    model.compile(optimizer='adam',
-                loss='MeanSquaredError',
-                metrics=['rmsprop'])
+    # model.compile(optimizer='adam',
+    #             loss='MeanSquaredError',
+    #             metrics=['rmsprop'])
 
-    model.fit(x_train, y_train, epochs=1, batch_size=1)
+    # model.fit(x_train, y_train, epochs=1, batch_size=1)
+
+    model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.fit(x_train, y_train, epochs=50, batch_size=1, verbose=2)
 
     return model
 
@@ -100,4 +123,5 @@ if __name__ == '__main__':
     # model = load_model('C:/Users/weng/Downloads/TKU_MNIST/my_model.h5')
 
     ''' 測試模型 '''
-    # model.evaluate(x_test, y_test, verbose=2)
+    scores = model.evaluate(x_train, np.array([1]), verbose=0)
+    print("Model Accuracy: %.2f%%" % (scores[1]*100))
