@@ -1,5 +1,6 @@
 import tensorflow as tf
-tf.compat.v1.disable_eager_execution()
+from tensorflow.keras.utils import plot_model
+
 
 import cv2
 import numpy as np
@@ -59,7 +60,8 @@ def model_building():
     model = tf.keras.models.Sequential([
         # , input_shape=(1,921600)
         # units(LSTM unit number), input_shape(, number of features)
-        tf.keras.layers.LSTM(units = 100, input_shape=(1,921600), return_sequences=True),
+        tf.keras.layers.LSTM(units = 10, input_shape=(1,921600), return_sequences=True),
+        tf.keras.layers.LSTM(units = 100),
         # Shape => [batch, time, features]
         tf.keras.layers.Dense(1, activation='softmax')
     ])
@@ -104,6 +106,7 @@ def load_model(path):
 
 
 if __name__ == '__main__':
+
     ''' 加載資料 '''
     x_train, y_train = load_data()
 
@@ -112,6 +115,7 @@ if __name__ == '__main__':
 
     ''' 查看模型架構 '''
     model.summary()
+    plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
 
     ''' 訓練模型 '''
     model = train_model(model, x_train, y_train)
