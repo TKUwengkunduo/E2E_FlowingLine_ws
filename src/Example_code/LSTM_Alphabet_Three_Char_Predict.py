@@ -7,7 +7,8 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.utils import np_utils
-from keras.preprocessing.sequence import pad_sequences
+# from keras.preprocessing.sequence import pad_sequences    # Ubuntu
+from keras_preprocessing.sequence import pad_sequences      # Jetson Ubuntu
 
 # 給定隨機的種子, 以便讓大家跑起來的結果是相同的
 numpy.random.seed(7)
