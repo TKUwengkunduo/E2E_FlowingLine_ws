@@ -1,6 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras.utils import plot_model
 
+from tensorflow.keras import Model
+from tensorflow.keras import Input
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Dense
 
 import cv2
 import numpy as np
@@ -15,7 +19,7 @@ def load_data():
     Data_train = []
     Data_train_labe = [1]
 
-    img = cv2.imread('/home/iarc/work/E2E_FlowingLine_ws/test_data/1.jpg')
+    img = cv2.imread('/home/iclab/work/E2E_FlowingLine_ws/test_data/1.jpg')
     # img = LoadData.image_convert_type(img)
     img = LoadData.image_resize(img, (640, 480))
 
@@ -57,14 +61,21 @@ def load_data():
 
 
 def model_building():
-    model = tf.keras.models.Sequential([
-        # , input_shape=(1,921600)
-        # units(LSTM unit number), input_shape(, number of features)
-        tf.keras.layers.LSTM(units = 10, input_shape=(1,921600), return_sequences=True),
-        tf.keras.layers.LSTM(units = 100),
-        # Shape => [batch, time, features]
-        tf.keras.layers.Dense(1, activation='softmax')
-    ])
+    # model = tf.keras.models.Sequential([
+    #     # , input_shape=(1,921600)
+    #     # units(LSTM unit number), input_shape(, number of features)
+    #     tf.keras.layers.LSTM(units = 10, input_shape=(1,921600), return_sequences=True),
+    #     tf.keras.layers.LSTM(units = 100),
+    #     # Shape => [batch, time, features]
+    #     tf.keras.layers.Dense(1, activation='softmax')
+    # ])
+
+    Input_layer     = Input(shape=(1,921600), name='input')
+    H1_LSTM         = LSTM(units = 10, return_sequences=True)       (Input_layer)
+    H2_LSTM         = LSTM(units = 100, return_sequences=False)     (H1_LSTM)
+    Output_layer    = Dense(1, activation='softmax')                (H2_LSTM)
+
+    model = Model(inputs=Input_layer, outputs=Output_layer)
 
     return model
 
