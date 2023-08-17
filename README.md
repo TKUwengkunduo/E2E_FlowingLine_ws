@@ -1,7 +1,7 @@
 # E2E_FlowingLine_ws
 
 ## Docker Environment
-###### If you already have an ubuntu environment, oyu can skip this step
+###### If you already have an ubuntu environment, you can skip this step
 ```js
 mkdir weng_ws
 cd weng_ws
