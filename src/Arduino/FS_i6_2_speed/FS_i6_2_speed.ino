@@ -55,8 +55,9 @@ void loop() {
   double vl = ((vx+vy)/100)*V;
 
   Serial.print(int(vl));
-  Serial.write(' | ');
-  Serial.println(int(vr));
+  Serial.println('L');
+  Serial.print(int(vr));
+  Serial.println('R');
 
-  delay(10);
+  delay(20);
 }
