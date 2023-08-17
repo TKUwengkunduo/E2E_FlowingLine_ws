@@ -7,8 +7,8 @@ mkdir weng_ws
 cd weng_ws
 git clone https://github.com/TKUwengkunduo/ubuntu_docker.git
 cd ubuntu_docker/ub22.04_ros2_cu117_cudnn/docker
-./build
-./run
+./build.sh
+./run.sh
 ```
 
 ## Download
