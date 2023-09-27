@@ -87,7 +87,8 @@ def train_model(model, x_train, y_train):
 
     # model.fit(x_train, y_train, epochs=1, batch_size=1)
 
-    model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.fit(x_train, y_train, epochs=50, batch_size=1, verbose=2)
 
     return model

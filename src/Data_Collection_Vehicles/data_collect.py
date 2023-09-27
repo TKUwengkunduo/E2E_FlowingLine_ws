@@ -9,7 +9,7 @@ class WRITE_DATA():
         self.proj_name = proj_name
         self.num = 0
 
-        time.sleep(0.5)
+        # time.sleep(0.5)
         self.data_file = open('./Data/' + proj_name + '.txt', 'w')
         self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
