@@ -1,10 +1,10 @@
 import numpy as np
-import tensorflow as tf
 import cv2
 
 
-class Image_processing:
 
+
+class Image_processing:
     def __init__(self):
         pass
 
@@ -20,3 +20,21 @@ class Image_processing:
         
     def test():
         print("dadscsdvdfhbnd")
+
+
+class Loader(Image_processing):
+    def  __init__(self):
+        pass
+
+    def search(self):
+        data_txt = open('./Data_Collection_Vehicles/Data/data.txt', 'r')
+
+
+    def image_read(self):
+        cv2.imread('./Data_Collection_Vehicles/Data/iclab1004/iclab1004_3.png')
+
+
+if __name__=='__main__':
+    loader = Loader()
+    loader.image_read()
+    loader.search()

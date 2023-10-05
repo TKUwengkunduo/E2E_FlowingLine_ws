@@ -17,9 +17,9 @@ LoadData = Load_Data.Image_processing
 def load_data():
     
     Data_train = []
-    Data_train_labe = [1]
+    Data_train_labe = [(1,2)]
 
-    img = cv2.imread('/home/iclab/work/E2E_FlowingLine_ws/test_data/1.jpg')
+    img = cv2.imread('/home/weng/work/E2E_FlowingLine_ws/test_data/1.jpg')
     # img = LoadData.image_convert_type(img)
     img = LoadData.image_resize(img, (640, 480))
 
@@ -30,24 +30,6 @@ def load_data():
     print('2', np.shape(img))
     print('=========================================')
     print(img)
-    
-    # Data_train = tf.compat.v1.placeholder("float", [None, img])
-    
-    # Data_train = np.expand_dims(img, axis = 0)
-
-    # Data_train.append(np.array(img/255.0))
-    
-    # print('=========================================')
-    # print('3', np.shape(Data_train))
-    # print('=========================================')
-
-    # print(Data_train)
-
-    # img = cv2.imread('/home/weng/weng_ws/E2E_FlowingLine_ws/test_data/2.jpg')
-    # img = LoadData.image_convert_type(img)
-    # img = LoadData.image_resize(img, (640, 480))
-
-    # Data_train.append(np.array(img/255.0))
 
     # 重塑 x_train 資料的維度成為 (samples, time_steps, features)
     x_train = np.reshape(img, (1, 1, 921600))  # <-- 特別注意這裡
@@ -73,7 +55,7 @@ def model_building():
     Input_layer     = Input(shape=(1,921600), name='input')
     H1_LSTM         = LSTM(units = 10, return_sequences=True)       (Input_layer)
     H2_LSTM         = LSTM(units = 100, return_sequences=False)     (H1_LSTM)
-    Output_layer    = Dense(1, activation='softmax')                (H2_LSTM)
+    Output_layer    = Dense(2, activation='softmax')                (H2_LSTM)
 
     model = Model(inputs=Input_layer, outputs=Output_layer)
 
@@ -88,7 +70,8 @@ def train_model(model, x_train, y_train):
     # model.fit(x_train, y_train, epochs=1, batch_size=1)
 
     # model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.fit(x_train, y_train, epochs=50, batch_size=1, verbose=2)
 
     return model
@@ -139,5 +122,5 @@ if __name__ == '__main__':
     # model = load_model('C:/Users/weng/Downloads/TKU_MNIST/my_model.h5')
 
     ''' 測試模型 '''
-    scores = model.evaluate(x_train, np.array([1]), verbose=0)
+    scores = model.evaluate(x_train, np.array([(1,2)]), verbose=0)
     print("Model Accuracy: %.2f%%" % (scores[1]*100))
